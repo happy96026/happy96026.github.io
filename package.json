@@ -1,0 +1,14 @@
+{
+  "name": "happy96026.github.io",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:happy96026/happy96026.github.io.git",
+  "author": "Min Soung Choi <m.choi960@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.26.7"
+  },
+  "scripts": {
+    "start": "browser-sync start --server --port 8000 -f '.'"
+  }
+}
