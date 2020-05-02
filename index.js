@@ -1,13 +1,13 @@
 "use strict"
 
 function main () {
-  const nav = document.querySelector('.nav')
+  const navContainer = document.querySelector('.nav-container')
 
   window.addEventListener('scroll', e => {
     if (window.scrollY == 0)
-      nav.classList.add('nav_top')
+      navContainer.classList.add('nav-container_top')
     else
-      nav.classList.remove('nav_top')
+      navContainer.classList.remove('nav-container_top')
   })
 }
 
