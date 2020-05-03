@@ -88,7 +88,7 @@ body {
 }
 
 .nav-container:not(.nav-container_top) .nav-button {
-  background-color: #333;
+  background-color: white;
 }
 
 .nav-button__container {
@@ -98,12 +98,16 @@ body {
   height: 100%;
 }
 
-.nav-button__container > span {
+.nav-button__bar {
   height: 2px;
   display: inline-block;
   border-radius: 2px;
-  background-color: white;
+  background-color: var(--color-font-primary);
   width: 100%;
+}
+
+.nav-container_top .nav-button__bar {
+  background-color: white;
 }
 
 .nav {
@@ -250,7 +254,7 @@ body {
 @media only screen and (max-width: 991px) {
   .home__text-container {
     justify-content: center;
-    flex-grow: 7;
+    flex-grow: 3;
   }
 }
 
@@ -293,7 +297,7 @@ body {
 
 @media only screen and (max-width: 991px) {
   .home__img-container {
-    flex-grow: 3;
+    flex-grow: 7;
   }
 }
 
