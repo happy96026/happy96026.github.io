@@ -1,0 +1,362 @@
+/*
+Material colors: https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=F44336&secondary.color=283593&primary.text.color=ffffff
+*/
+
+$color-font-primary: #212121;
+$color-primary: #f44336;
+$color-primary-light: #ff7961;
+$color-primary-dark: #ba000d;
+$color-secondary: #303f9f;
+$color-secondary-light: #666ad1;
+$color-secondary-dark: #001970;
+$nav-height: 65px;
+$transition-duration: 300ms;
+$section-margin-y: 6rem;
+
+@mixin break-sm {
+  @media only screen and (min-width: 600px) {
+    @content;
+  }
+}
+
+@mixin break-m {
+  @media only screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin break-l {
+  @media only screen and (min-width: 992px) {
+    @content;
+  }
+}
+
+@mixin break-xl {
+  @media only screen and (min-width: 1200px) {
+    @content;
+  }
+}
+
+:root {
+  --color-font-primary: #{$color-font-primary};
+  --color-primary: #{$color-primary};
+  --color-primary-light: #{$color-primary-light};
+  --color-primary-dark: #{$color-primary-dark};
+  --color-secondary: #{$color-secondary};
+  --color-secondary-light: #{$color-secondary-light};
+  --color-secondary-dark: #{$color-secondary-dark};
+
+  font-size: 16px;
+  line-height: 1.5;
+
+  @include break-l {
+    font-size: 18px;
+  }
+
+  @include break-xl {
+    font-size: 20px;
+  }
+}
+
+body {  
+  font-family: -apple-system, 
+               BlinkMacSystemFont, 
+               "Segoe UI", 
+               Roboto, 
+               Oxygen,
+               Ubuntu,
+               Cantarell,
+               "Open Sans",
+               "Helvetica Neue", 
+               sans-serif;
+  color: $color-font-primary;
+  color: var(--color-font-primary);
+}
+
+.nav-container {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1;
+
+  @supports (position: sticky) {
+    position: -webkit-sticky;
+    position: sticky;
+    position: sticky;
+  }
+}
+
+.nav-button {
+  width: 45px;
+  height: 45px;
+  border: none;
+  outline: none;
+  background-color: $color-secondary;
+  background-color: var(--color-secondary);
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  padding: 0.9rem 0.75rem;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  transition: background-color ease-in-out $transition-duration;
+
+  @include break-m {
+    display: none;
+  }
+}
+
+.nav-button__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.nav-button__bar {
+  height: 2px;
+  display: inline-block;
+  border-radius: 2px;
+  background-color: white;
+  width: 100%;
+  transition: background-color ease-in-out $transition-duration;
+}
+
+.nav {
+  background-color: white;
+  height: 0;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: 
+    box-shadow ease-in-out $transition-duration,
+    background-color ease-in-out $transition-duration,
+    height ease-in-out $transition-duration;
+  
+  @include break-m {
+    height: $nav-height !important;
+    padding: 0;
+  }
+
+  .nav-container_top & {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+    background-color: $color-primary-light;
+    background-color: var(--color-primary-light);
+    color: white;
+
+    @include break-m {
+      box-shadow: none;
+      background-color: $color-primary;
+      background-color: var(--color-primary);
+    }
+  }
+}
+
+.nav_init {
+  height: auto;
+  font-size: 16px;
+}
+
+.nav__list {
+  list-style: none;
+  margin: 0.5rem 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  @include break-m {
+    margin: auto;
+    height: 100%;
+  }
+
+  .nav_init & {
+    margin: 0.5rem 0;
+  }
+}
+
+.nav__list-item {
+  flex-basis: 991px;
+  text-align: center;
+
+  @include break-m {
+    flex-basis: auto;
+  }
+
+  .nav_init & {
+    flex-basis: 10000px;
+  }
+}
+
+.nav__link {
+  display: inline-block;
+  color: inherit;
+  font-weight: 400;
+  text-decoration: none;
+  margin: 0 0.5em;
+  padding: 0.5em;
+}
+
+.nav__link-text {
+  position: relative;
+  transition: color ease-in-out $transition-duration;
+
+  .nav-container:not(.nav-container_top) .nav__link_current & {
+    color: $color-primary;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -0.3em;
+    left: 0;
+    transition: background-color ease-in-out $transition-duration;
+
+    .nav__link_current & {
+      background-color: white;
+    }
+
+    .nav-container:not(.nav-container_top) .nav__link_current & {
+      background-color: $color-primary;
+      background-color: var(--color-primary);
+    }
+  }
+}
+
+.main {
+  position: static;
+
+  @include break-m {
+    position: relative;
+    top: $nav-height;
+  }
+
+  @supports (position: sticky) {
+    position: static;
+  }
+}
+
+.section-container {
+  display: flex;
+
+  @include break-l {
+    min-height: calc(100vh - #{$nav-height});
+  }
+
+  &:not(.home) {
+    justify-content: center;
+  }
+}
+
+.section {
+  margin: 3rem 0;
+  width: 850px;
+  max-width: 85%;
+
+  @include break-l {
+    margin: 4rem 0;
+  }
+
+  @include break-xl {
+    margin: 6rem 0;
+  }
+}
+
+.section__header {
+  text-align: center;
+  margin: 0 0 3rem;
+
+  @include break-l {
+    margin: 0 0 4rem;
+  }
+
+  @include break-xl {
+    margin: 0 0 6rem;
+  }
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  transition: height ease-in-out $transition-duration;
+
+  @include break-m {
+    height: calc(100vh - #{$nav-height});
+  }
+
+  @include break-l {
+    flex-direction: row;
+  }
+}
+
+.home > * {
+  flex: 1;
+  flex-basis: 0;
+}
+
+.home__text-container {
+  display: flex;
+  color: white;
+  background-color: $color-primary;
+  background-color: var(--color-primary);
+  justify-content: center;
+  align-items: center;
+  flex-grow: 3;
+
+  @include break-l {
+    justify-content: flex-end;
+    flex-grow: 1;
+  }
+}
+
+.home__section {
+  position: static;
+  margin: 0;
+
+  @include break-m {
+    position: relative;
+    margin: 0 2rem;
+    bottom: 1rem;
+  }
+}
+
+.home__text {
+  font-size: 1.2rem;
+
+  @include break-l {
+    font-size: 1.5rem;
+  }
+}
+
+.home__text > * {
+  text-align: center;
+  display: block;
+}
+
+.home__body {
+  margin: 0 0 0.2em;
+}
+
+.home__img {
+  background-image: url('/my-image.jpg');
+  background-size: cover;
+  background-position: 50% 50%;
+  flex-grow: 7;
+
+  @include break-l {
+    flex-grow: 1;
+  }
+}
+
+.about {
+  background-color: #eceff1;
+}
+
+.contact {
+  background-color: $color-secondary;
+  background-color: var(--color-secondary);
+  color: white;
+}

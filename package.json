@@ -6,9 +6,11 @@
   "author": "Min Soung Choi <m.choi960@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "browser-sync": "^2.26.7"
+    "browser-sync": "^2.26.7",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.1.0"
   },
   "scripts": {
-    "start": "browser-sync start --server --port 8000 -f '.'"
+    "start": "gulp"
   }
 }
