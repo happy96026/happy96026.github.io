@@ -2,11 +2,11 @@
 
 var breakM = 768
 var navHeight = 65
+var nav, navContainer, navButton
 
 function scrollToElement (e) {
-  var nav = document.querySelector('.nav')
   nav.style.height = ''
-  nav.classList.remove('nav_show')
+  navContainer.classList.remove('nav-container_show')
 
   var element = document.querySelector('.' + e.currentTarget.getAttribute('data-section'))
   var top = window.pageYOffset + element.getBoundingClientRect().top
@@ -23,11 +23,11 @@ function scrollToElement (e) {
 }
 
 function main () {
-  var navContainer = document.querySelector('.nav-container')
-  var navButton = document.querySelector('.nav-button')
-  var nav = document.querySelector('.nav')
+  navContainer = document.querySelector('.nav-container')
+  navButton = document.querySelector('.nav-button')
+  nav = document.querySelector('.nav')
 
-  var navHeight = window.getComputedStyle(nav).height
+  var navHeightSmall = window.getComputedStyle(nav).height
   nav.classList.remove('nav_init')
 
   window.addEventListener('scroll', function () {
@@ -38,12 +38,12 @@ function main () {
   })
 
   navButton.addEventListener('click', function () {
-    if (nav.classList.contains('nav_show')) {
+    if (navContainer.classList.contains('nav-container_show')) {
       nav.style.height = ''
-      nav.classList.remove('nav_show')
+      navContainer.classList.remove('nav-container_show')
     } else  {
-      nav.style.height = navHeight
-      nav.classList.add('nav_show')
+      nav.style.height = navHeightSmall
+      navContainer.classList.add('nav-container_show')
     }
   })
 
@@ -53,9 +53,9 @@ function main () {
   }
 
   window.addEventListener('resize', function () {
-    if (window.matchMedia('only screen and (min-width: ' + breakM + 'px)')) {
+    if (window.matchMedia('only screen and (min-width: ' + breakM + 'px)').matches) {
       nav.style.height = ''
-      nav.classList.remove('nav_show')
+      navContainer.classList.remove('nav-container_show')
     }
   })
 

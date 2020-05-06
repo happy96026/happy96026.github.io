@@ -10,7 +10,7 @@ $color-secondary: #303f9f;
 $color-secondary-light: #666ad1;
 $color-secondary-dark: #001970;
 $nav-height: 65px;
-$transition-duration: 300ms;
+$transition-duration: 250ms;
 $section-margin-y: 6rem;
 
 @mixin break-sm {
@@ -80,11 +80,6 @@ body {
   width: 100%;
   top: 0;
   z-index: 1;
-
-  @include break-m {
-    position: -webkit-sticky;
-    position: sticky;
-  }
 }
 
 .nav-button {
@@ -97,7 +92,8 @@ body {
   position: absolute;
   right: 1rem;
   top: 1rem;
-  padding: 0.9rem 0.75rem;
+  padding: 0;
+  // padding: 0.9rem 0.75rem;
   border-radius: 5px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
   transition: background-color ease-in-out $transition-duration;
@@ -110,17 +106,46 @@ body {
 .nav-button__container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
+  justify-content: center;
+  height: 30px;
+  width: 25px;
+  margin: auto;
+  transition: transform ease-in-out $transition-duration;
+
+  .nav-container_show & {
+    transform: rotate(45deg);
+  }
 }
 
 .nav-button__bar {
-  height: 2px;
+  $height: 2px;
+  $margin-y: 3px;
+  $translate-y: $margin-y * 2 + $height;
+
+  height: $height;
   display: inline-block;
-  border-radius: 2px;
   background-color: white;
   width: 100%;
-  transition: background-color ease-in-out $transition-duration;
+  transition: 
+    background-color ease-in-out $transition-duration,
+    opacity ease-in-out $transition-duration,
+    transform ease-in-out $transition-duration;
+  margin: $margin-y 0;
+
+  .nav-container_show & {
+    transform: rotate(-45deg) translateX(-5px);
+    opacity: 0;
+
+    &:first-child {
+      transform: translateY($translate-y);
+      opacity: 1;
+    }
+
+    &:last-child {
+      transform: translateY(-#{$translate-y}) rotate(-90deg);
+      opacity: 1;
+    }
+  }
 }
 
 .nav {
@@ -233,10 +258,6 @@ body {
   @include break-m {
     position: relative;
     top: $nav-height;
-  }
-
-  @supports (position: sticky) {
-    position: static;
   }
 }
 
