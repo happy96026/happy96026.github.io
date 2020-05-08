@@ -12,53 +12,10 @@ $color-secondary-dark: #001970;
 $nav-height: 65px;
 $transition-duration: 250ms;
 $section-margin-y: 6rem;
-
-@mixin break-sm {
-  @media only screen and (min-width: 600px) {
-    @content;
-  }
-}
-
-@mixin break-m {
-  @media only screen and (min-width: 768px) {
-    @content;
-  }
-}
-
-@mixin break-l {
-  @media only screen and (min-width: 992px) {
-    @content;
-  }
-}
-
-@mixin break-xl {
-  @media only screen and (min-width: 1200px) {
-    @content;
-  }
-}
-
-:root {
-  --color-font-primary: #{$color-font-primary};
-  --color-primary: #{$color-primary};
-  --color-primary-light: #{$color-primary-light};
-  --color-primary-dark: #{$color-primary-dark};
-  --color-secondary: #{$color-secondary};
-  --color-secondary-light: #{$color-secondary-light};
-  --color-secondary-dark: #{$color-secondary-dark};
-
-  font-size: 16px;
-  line-height: 1.5;
-
-  @include break-l {
-    font-size: 18px;
-  }
-
-  @include break-xl {
-    font-size: 20px;
-  }
-
-  scroll-behavior: smooth;
-}
+$break-sm: 'sm';
+$break-m: 'm';
+$break-l: 'l';
+$break-xl: 'xl';
 
 body {  
   font-family: -apple-system, 
@@ -72,7 +29,16 @@ body {
                "Helvetica Neue", 
                sans-serif;
   color: $color-font-primary;
-  color: var(--color-font-primary);
+  font-size: 16px;
+  line-height: 1.5;
+
+  .#{$break-l} & {
+    font-size: 18px;
+  }
+
+  .#{$break-xl} & {
+    font-size: 20px;
+  }
 }
 
 .nav-container {
@@ -83,39 +49,39 @@ body {
 }
 
 .nav-button {
-  width: 45px;
-  height: 45px;
+  width: 52px;
+  height: 52px;
   border: none;
   outline: none;
   background-color: $color-secondary;
-  background-color: var(--color-secondary);
   position: absolute;
   right: 1rem;
   top: 1rem;
   padding: 0;
-  // padding: 0.9rem 0.75rem;
+  padding: 10px 10px;
   border-radius: 5px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
   transition: background-color ease-in-out $transition-duration;
+  line-height: 0;
 
-  @include break-m {
+  .#{$break-m} & {
     display: none;
   }
 }
 
 .nav-button__container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 30px;
-  width: 25px;
-  margin: auto;
-  transition: transform ease-in-out $transition-duration;
+  height: 100%;
+}
+
+.nav-button__inner {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .nav-button__bar {
-  $height: 2px;
-  $margin-y: 3px;
+  $height: 3px;
+  $margin-y: 4px;
   $translate-y: $margin-y * 2 + $height;
 
   height: $height;
@@ -127,6 +93,15 @@ body {
     opacity ease-in-out $transition-duration,
     transform ease-in-out $transition-duration;
   margin: $margin-y 0;
+  border-radius: 4px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   .nav-container_show & {
     transform: translateX(-5px);
@@ -154,7 +129,7 @@ body {
     background-color ease-in-out $transition-duration,
     height ease-in-out $transition-duration;
   
-  @include break-m {
+  .#{$break-m} & {
     height: $nav-height;
     padding: 0;
   }
@@ -162,13 +137,11 @@ body {
   .nav-container_top & {
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
     background-color: $color-primary-light;
-    background-color: var(--color-primary-light);
     color: white;
 
-    @include break-m {
+    .#{$break-m} & {
       box-shadow: none;
       background-color: $color-primary;
-      background-color: var(--color-primary);
     }
   }
 }
@@ -182,14 +155,13 @@ body {
   list-style: none;
   margin: 0.5rem 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
 
-  @include break-m {
+  .#{$break-m} & {
     margin: auto;
-    height: 100%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
   }
 
   .nav_init & {
@@ -198,11 +170,13 @@ body {
 }
 
 .nav__list-item {
-  flex-basis: 991px;
+  display: block;
+  margin: auto;
   text-align: center;
 
-  @include break-m {
-    flex-basis: auto;
+  .#{$break-m} & {
+    display: inline-block;
+    margin: 0 0.5em;
   }
 
   .nav_init & {
@@ -215,7 +189,6 @@ body {
   color: inherit;
   font-weight: 400;
   text-decoration: none;
-  margin: 0 0.5em;
   padding: 0.5em;
   cursor: pointer;
 }
@@ -256,7 +229,6 @@ body {
       background-color ease-in-out $transition-duration,
       opacity ease-in-out $transition-duration;
     background-color: $color-primary;
-    background-color: var(--color-primary);
     opacity: 0;
 
     .nav-container_top & {
@@ -281,16 +253,16 @@ body {
 .main {
   position: static;
 
-  @include break-m {
+  .#{$break-m} & {
     position: relative;
     top: $nav-height;
   }
 }
 
 .section-container {
-  display: flex;
+  overflow: hidden;
 
-  @include break-l {
+  .#{$break-l} & {
     min-height: calc(100vh - #{$nav-height});
   }
 
@@ -300,16 +272,16 @@ body {
 }
 
 .section {
-  margin: 3rem 0;
-  width: 850px;
+  margin: 3rem auto;
+  width: 1000px;
   max-width: 85%;
 
-  @include break-l {
-    margin: 4rem 0;
+  .#{$break-l} & {
+    margin: 4rem auto;
   }
 
-  @include break-xl {
-    margin: 6rem 0;
+  .#{$break-xl} & {
+    margin: 6rem auto;
   }
 }
 
@@ -317,11 +289,11 @@ body {
   text-align: center;
   margin: 0 0 3rem;
 
-  @include break-l {
+  .#{$break-l} & {
     margin: 0 0 4rem;
   }
 
-  @include break-xl {
+  .#{$break-xl} & {
     margin: 0 0 6rem;
   }
 }
@@ -332,11 +304,11 @@ body {
   height: 100vh;
   transition: height ease-in-out $transition-duration;
 
-  @include break-m {
+  .#{$break-m} & {
     height: calc(100vh - #{$nav-height});
   }
 
-  @include break-l {
+  .#{$break-l} & {
     flex-direction: row;
   }
 }
@@ -350,12 +322,11 @@ body {
   display: flex;
   color: white;
   background-color: $color-primary;
-  background-color: var(--color-primary);
   justify-content: center;
   align-items: center;
   flex-grow: 3;
 
-  @include break-l {
+  .#{$break-l} & {
     justify-content: flex-end;
     flex-grow: 1;
   }
@@ -363,9 +334,10 @@ body {
 
 .home__section {
   position: static;
-  margin: 0;
+  // margin: 1rem 0;
+  overflow: hidden;
 
-  @include break-m {
+  .#{$break-m} & {
     position: relative;
     margin: 0 2rem;
     bottom: 1rem;
@@ -374,8 +346,9 @@ body {
 
 .home__text {
   font-size: 1.2rem;
+  margin: 2rem 0;
 
-  @include break-l {
+  .#{$break-l} & {
     font-size: 1.5rem;
   }
 }
@@ -390,13 +363,17 @@ body {
 }
 
 .home__img {
-  background-image: url('/my-image.jpg');
+  background-image: url('./my-image.jpg');
   background-size: cover;
   background-position: 50% 50%;
   flex-grow: 7;
 
-  @include break-l {
+  .#{$break-l} & {
     flex-grow: 1;
+  }
+
+  .no-flex & {
+    height: 100%;
   }
 }
 
@@ -406,6 +383,5 @@ body {
 
 .contact {
   background-color: $color-secondary;
-  background-color: var(--color-secondary);
   color: white;
 }
