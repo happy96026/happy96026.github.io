@@ -42,7 +42,9 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin(),
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*', '!CNAME']
+    }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       filename: 'index.html'
