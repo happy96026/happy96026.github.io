@@ -39,6 +39,14 @@ body {
   .#{$break-xl} & {
     font-size: 20px;
   }
+
+  .preloading & {
+    overflow-y: hidden;
+  }
+}
+
+.overflow-hide {
+  overflow-y: hidden;
 }
 
 .nav-container {
@@ -197,25 +205,12 @@ body {
   position: relative;
   transition: color ease-in-out $transition-duration;
 
-  .nav__list-item_intersect & {
+  .nav__link_current & {
     color: $color-primary;
 
     .nav-container_top & {
       color: white;
     }
-
-  }
-
-  .nav__list-item_intersect ~ .nav__list-item_intersect & {
-    color: inherit;
-  }
-
-  .nav-container_bottom .nav__list-item_intersect & {
-    color: inherit;
-  }
-
-  .nav-container_bottom .nav__list-item_intersect:last-child & {
-    color: $color-primary;
   }
 
   &::after {
@@ -235,16 +230,7 @@ body {
       background-color: white;
     }
 
-    .nav__list-item_intersect & {
-      opacity: 1;
-    }
-
-    .nav__list-item_intersect ~ .nav__list-item_intersect &, 
-    .nav-container_bottom .nav__list-item_intersect & {
-      opacity: 0;
-    }
-
-    .nav-container_bottom .nav__list-item_intersect:last-child & {
+    .nav__link_current & {
       opacity: 1;
     }
   }
@@ -252,10 +238,15 @@ body {
 
 .main {
   position: static;
+  transition: filter ease-in-out $transition-duration;
 
   .#{$break-m} & {
     position: relative;
     top: $nav-height;
+  }
+
+  .nav-container_show + & {
+    filter: blur(10px);
   }
 }
 
@@ -324,7 +315,7 @@ body {
   background-color: $color-primary;
   justify-content: center;
   align-items: center;
-  flex-grow: 3;
+  flex-grow: 4;
 
   .#{$break-l} & {
     justify-content: flex-end;
@@ -362,11 +353,10 @@ body {
   margin: 0 0 0.2em;
 }
 
-.home__img {
-  background-image: url('./my-image.jpg');
-  background-size: cover;
-  background-position: 50% 50%;
-  flex-grow: 7;
+.home__img-container {
+  flex-grow: 6;
+  min-width: 0;
+  min-height: 0;
 
   .#{$break-l} & {
     flex-grow: 1;
@@ -377,6 +367,12 @@ body {
   }
 }
 
+.home__img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
 .about {
   background-color: #eceff1;
 }
@@ -384,4 +380,71 @@ body {
 .contact {
   background-color: $color-secondary;
   color: white;
+}
+
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: $color-secondary;
+  opacity: 0;
+  z-index: -1;
+  transition:
+    opacity ease-in-out 500ms,
+    z-index step-end 500ms;
+
+  .preloading & {
+    opacity: 1;
+    z-index: 2;
+  }
+}
+
+.preloader__container {
+  display: inline-block;
+  position: absolute;
+  margin: 0 auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 30px));
+}
+
+.preloader__circle {
+  $duration: 1200ms;
+
+  display: inline-block;
+  vertical-align: top;
+  background-color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  margin: 0 7px;
+  animation: change-radius $duration ease-out infinite;
+
+  &:nth-child(2) {
+    animation-delay: calc(2 * #{$duration} / 15);
+  }
+
+  &:nth-child(3) {
+    animation-delay: calc(3 * #{$duration} / 15);
+  }
+
+  &:nth-child(4) {
+    animation-delay: calc(4 * #{$duration} / 15);
+  }
+}
+
+@keyframes change-radius {
+  0% {
+    transform: scaleX(1) scaleY(1);
+  }
+
+  50% {
+    transform: scaleX(0) scaleY(0);
+  }
+
+  100% {
+    transform: scaleX(1) scaleY(1);
+  }
 }

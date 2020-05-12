@@ -31,6 +31,10 @@ module.exports = {
         ]
       },
       {
+        test: /\.html$/,
+        loader: 'html-loader'
+      },
+      {
         test: /\.(png|svg|jpg|gif)$/,
         loader: 'file-loader',
         options: {
@@ -47,14 +51,14 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
-      filename: 'index.html'
+      filename: 'index.html',
+      publicPath: 'assets'
     })
   ],
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     open: true,
     port: 8000,
-    host: '0.0.0.0',
     hot: true
   }
 }

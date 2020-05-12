@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="preloading">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,9 +14,7 @@
   </head>
 
   <body>
-    <div class="point" data-point-name="top"></div>
-
-    <div class="nav-container nav-container_top">
+    <div class="nav-container">
       <button class="nav-button">
         <div class="nav-button__container">
           <div class="nav-button__inner">
@@ -27,10 +25,10 @@
         </div>
       </button>
 
-      <nav class="nav nav_init">
+      <nav class="nav">
         <ul class="nav__list">
-          <li class="nav__list-item nav__list-item_intersect">
-            <a class="nav__link nav__link_current" data-nav="home">
+          <li class="nav__list-item">
+            <a class="nav__link" data-nav="home">
               <span class="nav__link-text">HOME</span>
             </a>
           </li>
@@ -65,7 +63,9 @@
 
           </div>
         </div>
-        <div class="home__img"></div>
+        <div class="home__img-container">
+          <img class="home__img" src="./my-image.jpg" data-object-fit="cover">
+        </div>
       </div>
 
       <div class="section-container about" data-section="about">
@@ -114,6 +114,13 @@
     <footer>
     </footer>
 
-    <div class="point" data-point-name="bottom"></div>
+    <div class="preloader">
+      <div class="preloader__container">
+        <div class="preloader__circle"></div>
+        <div class="preloader__circle"></div>
+        <div class="preloader__circle"></div>
+        <div class="preloader__circle"></div>
+      </div>
+    </div>
   </body>
 </html>

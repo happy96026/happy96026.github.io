@@ -1,30 +1,13 @@
 import './styles.scss'
 
-import 'intersection-observer'
 import 'scroll-behavior-polyfill'
 import 'classlist-polyfill'
+import 'object-fit-polyfill'
 
 import ResizeObserver from 'resize-observer-polyfill'
 
 
 const navHeight = 65
-let nav, navContainer, navButton
-
-function scrollToElement (e) {
-  nav.style.height = ''
-  navContainer.classList.remove('nav-container_show')
-
-  const element = document.querySelector('.' + e.currentTarget.getAttribute('data-nav'))
-  let top = window.pageYOffset + element.getBoundingClientRect().top
-  if (document.documentElement.classList.contains('m'))
-    top -= navHeight
-
-  const scrollOptions = { top }
-  if ('now' in window.performance) 
-    scrollOptions['behavior'] = 'smooth'
-
-  window.scrollTo(scrollOptions)
-}
 
 function main () {
   // Detect Flex
@@ -32,30 +15,73 @@ function main () {
   if (dummy.style.flex === undefined && dummy.style.msFlex === undefined)
     document.documentElement.classList.add('no-flex')
 
-  navContainer = document.querySelector('.nav-container')
-  navButton = document.querySelector('.nav-button')
-  nav = document.querySelector('.nav')
+  const navContainer = document.querySelector('.nav-container')
+  const navButton = document.querySelector('.nav-button')
+  const nav = document.querySelector('.nav')
+  const main = document.querySelector('.main')
 
   // Get height of nav bar when screen is small
+  nav.style.width = '600px'
+  nav.style.height = 'initial'
   const navHeightSmall = window.getComputedStyle(nav).height
-  nav.classList.remove('nav_init')
+  nav.style.width = ''
+  nav.style.height = ''
 
+  // Nav show/hide
+  const showNav = () => {
+    let htmlWidth = window.innerWidth - document.documentElement.getBoundingClientRect().width
+    htmlWidth = `calc(100% - ${htmlWidth}px)`
+    document.documentElement.style.width = htmlWidth
+    document.documentElement.setAttribute('data-offset', window.pageYOffset)
+    navContainer.style.width = htmlWidth
+    nav.style.height = navHeightSmall
+    navContainer.classList.add('nav-container_show')
+    document.body.classList.add('overflow-hide')
+  }
+  const hideNav = () => {
+    document.documentElement.style.width = ''
+    navContainer.style.width = ''
+    nav.style.height = ''
+    navContainer.classList.remove('nav-container_show')
+    document.body.classList.remove('overflow-hide')
+
+    if (!document.documentElement.classList.contains('m'))
+      window.scrollTo(0, parseInt(document.documentElement.getAttribute('data-offset')))
+  }
+
+  // Nav trigger button for mobile
   navButton.addEventListener('click', () => {
-    if (navContainer.classList.contains('nav-container_show')) {
-      nav.style.height = ''
-      navContainer.classList.remove('nav-container_show')
-    } else  {
-      nav.style.height = navHeightSmall
-      navContainer.classList.add('nav-container_show')
-    }
+    if (navContainer.classList.contains('nav-container_show'))
+      hideNav()
+    else
+      showNav()
+  })
+
+  // Hide nav when main is clicked
+  main.addEventListener('click', () => {
+    hideNav()
   })
 
   // nav link click listeners
+  const scrollToElement = e => {
+    hideNav()
+
+    const element = document.querySelector('.' + e.currentTarget.getAttribute('data-nav'))
+    let top = window.pageYOffset + element.getBoundingClientRect().top
+    if (document.documentElement.classList.contains('m'))
+      top -= navHeight
+
+    const scrollOptions = { top }
+    if ('now' in window.performance) 
+      scrollOptions['behavior'] = 'smooth'
+
+    window.scrollTo(scrollOptions)
+  }
+
   const navLinks = document.querySelectorAll('.nav__link')
   for (const link of navLinks) {
     link.addEventListener('click', scrollToElement)
   }
-
 
   // resize observer
   const breakPoints = {
@@ -66,10 +92,8 @@ function main () {
   }
   const resizeObserver = new ResizeObserver(function (entries) {
     entries.forEach(function (entry) {
-      if (entry.contentRect.width >= breakPoints['m']) {
-        nav.style.height = ''
-        navContainer.classList.remove('nav-container_show')
-      }
+      if (entry.contentRect.width >= breakPoints['m'])
+        hideNav()
 
       Object.keys(breakPoints).forEach(function (point) {
         if (entry.contentRect.width >= breakPoints[point]) {
@@ -82,44 +106,54 @@ function main () {
   })
   resizeObserver.observe(document.documentElement)
 
-  const options = {
-    rootMargin: '-66px 0px 0px 0px'
+  // Set Navigation Link Color according to scroll position
+  const setCurrentLink = container => {
+    const newLink = document.querySelector(`[data-nav='${container.getAttribute('data-section')}']`)
+    const currentLink = document.querySelector('.nav__link_current')
+
+    if (currentLink !== newLink) {
+      if (currentLink) currentLink.classList.remove('nav__link_current')
+      if (newLink) newLink.classList.add('nav__link_current')
+    }
   }
 
-  // intersection observer
-  const iObserver = new IntersectionObserver(entries => {
-    entries.forEach(function (entry) {
-      const navItem = document.querySelector(
-        '[data-nav="' + entry.target.getAttribute('data-section') + '"]'
-      ).parentElement
-      
-      if (entry.isIntersecting)
-        navItem.classList.add('nav__list-item_intersect')
-      else
-        navItem.classList.remove('nav__list-item_intersect')
-    })
-  }, options)
+  const setNavLink = () => {
+    const offset = document.documentElement.classList.contains('m') ? navHeight : 0
+    const sectionContainers = document.querySelectorAll('.section-container')
+    const lastSectionContainer = sectionContainers[sectionContainers.length - 1]
 
-  const sectionContainers = document.querySelectorAll('.section-container')
-  for (const container of sectionContainers) {
-    iObserver.observe(container)
+    if (parseInt(lastSectionContainer.getBoundingClientRect().bottom) === window.innerHeight) {
+      setCurrentLink(lastSectionContainer)
+      return
+    }
+    
+    for (const container of sectionContainers) {
+      if (container.getBoundingClientRect().bottom > offset) {
+        setCurrentLink(container)
+        break
+      }
+    }
   }
 
-  const pointObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      const pointName = entry.target.getAttribute('data-point-name')
-      const className = 'nav-container_' + pointName
-      if (entry.isIntersecting)
-        navContainer.classList.add(className)
-      else
-        navContainer.classList.remove(className)
-    })
-  })
+  window.addEventListener('scroll', setNavLink)
+  setNavLink()
 
-  const points = document.querySelectorAll('.point')
-  points.forEach(point => {
-    pointObserver.observe(point)
-  })
+  // Detect scroll top
+  const detectScrollTop = () => {
+    if (window.pageYOffset === 0) 
+      navContainer.classList.add('nav-container_top')
+    else
+      navContainer.classList.remove('nav-container_top')
+  }
+
+  window.addEventListener('scroll', detectScrollTop)
+  detectScrollTop()
+
+  // nav.addEventListener('transitionend', e => {
+  //   if (e.propertyName === 'height')
+  // })
+  document.documentElement.classList.remove('preloading')
+
 }
 
 document.addEventListener('DOMContentLoaded', main)
