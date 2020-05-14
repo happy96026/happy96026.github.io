@@ -36,6 +36,7 @@ function main () {
     navContainer.style.width = htmlWidth
     nav.style.height = navHeightSmall
     navContainer.classList.add('nav-container_show')
+    nav.classList.add('nav_height-animate')
     document.body.classList.add('overflow-hide')
   }
   const hideNav = () => {
@@ -48,6 +49,11 @@ function main () {
     if (!document.documentElement.classList.contains('m'))
       window.scrollTo(0, parseInt(document.documentElement.getAttribute('data-offset')))
   }
+
+  nav.addEventListener('transitionend', e => {
+    if (e.type === 'transitionend' && !navContainer.classList.contains('nav-container_show'))
+      nav.classList.remove('nav_height-animate')
+  })
 
   // Nav trigger button for mobile
   navButton.addEventListener('click', () => {

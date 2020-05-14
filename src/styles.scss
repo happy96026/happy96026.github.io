@@ -134,8 +134,8 @@ body {
   overflow: hidden;
   transition: 
     box-shadow ease-in-out $transition-duration,
-    background-color ease-in-out $transition-duration,
-    height ease-in-out $transition-duration;
+    background-color ease-in-out $transition-duration;
+  //   height ease-in-out $transition-duration;
   
   .#{$break-m} & {
     height: $nav-height;
@@ -152,6 +152,13 @@ body {
       background-color: $color-primary;
     }
   }
+}
+
+.nav_height-animate {
+  transition: 
+    box-shadow ease-in-out $transition-duration,
+    background-color ease-in-out $transition-duration,
+    height ease-in-out $transition-duration;
 }
 
 .nav_init {
