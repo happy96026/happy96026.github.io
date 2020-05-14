@@ -3,8 +3,11 @@ import './styles.scss'
 import 'scroll-behavior-polyfill'
 import 'classlist-polyfill'
 import 'object-fit-polyfill'
+import './element-remove'
 
 import ResizeObserver from 'resize-observer-polyfill'
+
+import imgPath from './my-image.jpg'
 
 
 const navHeight = 65
@@ -19,6 +22,8 @@ function main () {
   const navButton = document.querySelector('.nav-button')
   const nav = document.querySelector('.nav')
   const main = document.querySelector('.main')
+  const sectionContainers = document.querySelectorAll('.section-container')
+  const sections = document.querySelectorAll('.section')
 
   // Get height of nav bar when screen is small
   nav.style.width = '600px'
@@ -35,21 +40,24 @@ function main () {
     document.documentElement.setAttribute('data-offset', window.pageYOffset)
     navContainer.style.width = htmlWidth
     nav.style.height = navHeightSmall
+
     navContainer.classList.add('nav-container_show')
     nav.classList.add('nav_height-animate')
     document.body.classList.add('overflow-hide')
   }
   const hideNav = () => {
-    document.documentElement.style.width = ''
     navContainer.style.width = ''
     nav.style.height = ''
     navContainer.classList.remove('nav-container_show')
     document.body.classList.remove('overflow-hide')
+    document.documentElement.style.width = ''
 
-    if (!document.documentElement.classList.contains('m'))
+    const dataOffset = document.documentElement.getAttribute('data-offset')
+    if (dataOffset) {
       window.scrollTo(0, parseInt(document.documentElement.getAttribute('data-offset')))
+      document.documentElement.setAttribute('data-offset', '')
+    }
   }
-
   nav.addEventListener('transitionend', e => {
     if (e.type === 'transitionend' && !navContainer.classList.contains('nav-container_show'))
       nav.classList.remove('nav_height-animate')
@@ -65,7 +73,8 @@ function main () {
 
   // Hide nav when main is clicked
   main.addEventListener('click', () => {
-    hideNav()
+    if (navContainer.classList.contains('nav-container_show'))
+      hideNav()
   })
 
   // nav link click listeners
@@ -125,7 +134,6 @@ function main () {
 
   const setNavLink = () => {
     const offset = document.documentElement.classList.contains('m') ? navHeight : 0
-    const sectionContainers = document.querySelectorAll('.section-container')
     const lastSectionContainer = sectionContainers[sectionContainers.length - 1]
 
     if (parseInt(lastSectionContainer.getBoundingClientRect().bottom) === window.innerHeight) {
@@ -155,11 +163,44 @@ function main () {
   window.addEventListener('scroll', detectScrollTop)
   detectScrollTop()
 
-  // nav.addEventListener('transitionend', e => {
-  //   if (e.propertyName === 'height')
-  // })
-  document.documentElement.classList.remove('preloading')
+  // Trigger animation on section at intersection
+  window.addEventListener('scroll', () => {
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top < window.innerHeight - 100)
+        section.classList.remove('section_before')
+      else
+        break
+    }
+  })
 
+  // Remove preloading screen
+  const img = new Image()
+  img.src = imgPath
+
+  const promiseHandler = resolve => () => resolve()
+  const imgLoadedPromise = new Promise(resolve => {
+    img.addEventListener('load', promiseHandler(resolve))
+    img.addEventListener('error', promiseHandler(resolve))
+    if (img.complete) resolve()
+  })
+  const navTransitionPromise = new Promise(resolve => {
+    nav.addEventListener('transitionend', promiseHandler(resolve))
+  })
+
+  const promiseArray = [imgLoadedPromise]
+  if ('transition' in nav.style)
+    promiseArray.push(navTransitionPromise)
+
+  Promise.all(promiseArray).then(() => {
+    document.documentElement.classList.remove('preloading')
+    img.remove()
+    nav.removeEventListener('transitionend', promiseHandler)
+
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top >= window.innerHeight - 100)
+        section.classList.add('section_before')
+    }
+  })
 }
 
 document.addEventListener('DOMContentLoaded', main)
