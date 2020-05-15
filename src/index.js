@@ -1,9 +1,11 @@
+import 'normalize.css'
 import './styles.scss'
 
 import 'scroll-behavior-polyfill'
 import 'classlist-polyfill'
 import 'object-fit-polyfill'
-import './element-remove'
+import 'focus-visible'
+import './element-remove-polyfill'
 
 import ResizeObserver from 'resize-observer-polyfill'
 
@@ -96,6 +98,10 @@ function main () {
   const navLinks = document.querySelectorAll('.nav__link')
   for (const link of navLinks) {
     link.addEventListener('click', scrollToElement)
+    link.addEventListener('keydown', e => {
+      if (e.key === 'Enter')
+        scrollToElement(e)
+    })
   }
 
   // resize observer
@@ -164,14 +170,15 @@ function main () {
   detectScrollTop()
 
   // Trigger animation on section at intersection
-  window.addEventListener('scroll', () => {
+  const triggerSectionAnimation = () => {
     for (const section of sections) {
       if (section.getBoundingClientRect().top < window.innerHeight - 100)
         section.classList.remove('section_before')
       else
         break
     }
-  })
+  }
+  window.addEventListener('scroll', triggerSectionAnimation)
 
   // Remove preloading screen
   const img = new Image()
@@ -195,11 +202,7 @@ function main () {
     document.documentElement.classList.remove('preloading')
     img.remove()
     nav.removeEventListener('transitionend', promiseHandler)
-
-    for (const section of sections) {
-      if (section.getBoundingClientRect().top >= window.innerHeight - 100)
-        section.classList.add('section_before')
-    }
+    triggerSectionAnimation()
   })
 }
 

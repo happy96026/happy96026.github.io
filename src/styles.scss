@@ -65,7 +65,6 @@ body {
   width: 52px;
   height: 52px;
   border: none;
-  outline: none;
   background-color: $color-secondary;
   position: absolute;
   right: 1rem;
@@ -74,11 +73,28 @@ body {
   padding: 10px 10px;
   border-radius: 5px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-  transition: background-color ease-in-out $transition-duration;
+  transition: 
+    background-color ease-in-out $transition-duration,
+    outline-color ease-in-out $transition-duration;
   line-height: 0;
+  outline-color: $color-font-primary;
+
+  .nav-container_top & {
+    outline-color: white;
+  }
 
   .#{$break-m} & {
     display: none;
+  }
+
+  &:focus {
+    outline-width: 3px;
+    outline-style: solid;
+  }
+
+  .js-focus-visible &:focus:not(.focus-visible),
+  &:focus:not(.focus-visible) {
+    outline: none;
   }
 }
 
@@ -210,6 +226,21 @@ body {
   text-decoration: none;
   padding: 0.5em;
   cursor: pointer;
+  transition: outline-color ease-in-out $transition-duration;
+  // transition: outline ease-in-out $transition-duration;
+
+  &:focus {
+    outline: 3px solid $color-font-primary;
+
+    .nav-container_top & {
+      outline-color: white;
+    }
+  }
+
+  .js-focus-visible &:focus:not(.focus-visible),
+  &:focus:not(.focus-visible) {
+    outline: none;
+  }
 }
 
 .nav__link-text {
