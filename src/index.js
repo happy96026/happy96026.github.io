@@ -61,7 +61,7 @@ function main () {
     }
   }
   nav.addEventListener('transitionend', e => {
-    if (e.type === 'transitionend' && !navContainer.classList.contains('nav-container_show'))
+    if (e.propertyName === 'height' && !navContainer.classList.contains('nav-container_show'))
       nav.classList.remove('nav_height-animate')
   })
 
@@ -85,8 +85,10 @@ function main () {
 
     const element = document.querySelector('.' + e.currentTarget.getAttribute('data-nav'))
     let top = window.pageYOffset + element.getBoundingClientRect().top
-    if (document.documentElement.classList.contains('m'))
-      top -= navHeight
+    if (e.currentTarget.getAttribute('data-nav') === 'home')
+      top = 0
+    else if (document.documentElement.classList.contains('m'))
+      top -= navHeight - 1
 
     const scrollOptions = { top }
     if ('now' in window.performance) 
@@ -130,11 +132,11 @@ function main () {
   // Set Navigation Link Color according to scroll position
   const setCurrentLink = container => {
     const newLink = document.querySelector(`[data-nav='${container.getAttribute('data-section')}']`)
-    const currentLink = document.querySelector('.nav__link_current')
+    const currentLink = document.querySelector('.nav__link:disabled')
 
     if (currentLink !== newLink) {
-      if (currentLink) currentLink.classList.remove('nav__link_current')
-      if (newLink) newLink.classList.add('nav__link_current')
+      if (currentLink) currentLink.disabled = false
+      if (newLink) newLink.disabled = true
     }
   }
 

@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 /*
 Material colors: https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=F44336&secondary.color=283593&primary.text.color=ffffff
 */
@@ -16,6 +18,18 @@ $break-sm: 'sm';
 $break-m: 'm';
 $break-l: 'l';
 $break-xl: 'xl';
+
+@mixin test-hover-pointer-query {
+  @media not all and (hover) and (pointer) {
+    @content;
+  }
+}
+
+@mixin hover-query {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
 
 body {  
   font-family: -apple-system, 
@@ -39,16 +53,7 @@ body {
   .#{$break-xl} & {
     font-size: 20px;
   }
-
-  // .preloading & {
-  //   overflow-y: hidden;
-  // }
 }
-
-// .preloading .nav-container > *,
-// .preloading .main > * {
-//   transition: none;
-// }
 
 .overflow-hide {
   overflow-y: hidden;
@@ -153,6 +158,7 @@ body {
   height: 0;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  visibility: hidden;
   transition: 
     box-shadow ease-in-out $transition-duration,
     background-color ease-in-out $transition-duration;
@@ -160,6 +166,7 @@ body {
   .#{$break-m} & {
     height: $nav-height;
     padding: 0;
+    visibility: visible;
   }
 
   .nav-container_top & {
@@ -175,6 +182,7 @@ body {
 }
 
 .nav_height-animate {
+  visibility: visible;
   transition: 
     box-shadow ease-in-out $transition-duration,
     background-color ease-in-out $transition-duration,
@@ -226,8 +234,9 @@ body {
   text-decoration: none;
   padding: 0.5em;
   cursor: pointer;
+  background: none;
+  border: none;
   transition: outline-color ease-in-out $transition-duration;
-  // transition: outline ease-in-out $transition-duration;
 
   &:focus {
     outline: 3px solid $color-font-primary;
@@ -241,17 +250,37 @@ body {
   &:focus:not(.focus-visible) {
     outline: none;
   }
+
+  &:disabled {
+    cursor: default;
+  }
 }
 
 .nav__link-text {
   position: relative;
   transition: color ease-in-out $transition-duration;
 
-  .nav__link_current & {
+  .nav-container:not(.nav-container_top) .nav__link:disabled & {
     color: $color-primary;
+  }
 
-    .nav-container_top & {
-      color: white;
+  .nav-container_top & {
+    color: white;
+  }
+
+  .nav__link:hover:not(:disabled) & {
+    opacity: 0.7;
+  }
+
+  @include test-hover-pointer-query {
+    .nav__link:hover:not(:disabled) & {
+      opacity: 1;
+    }
+  }
+
+  @include hover-query {
+    .nav__link:hover:not(:disabled) & {
+      opacity: 0.7;
     }
   }
 
@@ -272,7 +301,7 @@ body {
       background-color: white;
     }
 
-    .nav__link_current & {
+    .nav__link:disabled & {
       opacity: 1;
     }
   }
@@ -289,6 +318,7 @@ body {
 
   .nav-container_show + & {
     filter: blur(10px);
+    user-select: none;
   }
 }
 
