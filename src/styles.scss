@@ -19,13 +19,11 @@ $break-m: 'm';
 $break-l: 'l';
 $break-xl: 'xl';
 
-@mixin test-hover-pointer-query {
-  @media not all and (hover) and (pointer) {
+@mixin hover-query {
+  @media not all and (hover) and (pointer), (-ms-high-contrast: none) {
     @content;
   }
-}
 
-@mixin hover-query {
   @media (hover: hover) and (pointer: fine) {
     @content;
   }
@@ -80,7 +78,8 @@ body {
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
   transition: 
     background-color ease-in-out $transition-duration,
-    outline-color ease-in-out $transition-duration;
+    outline-color ease-in-out $transition-duration,
+    opacity ease-in-out $transition-duration;
   line-height: 0;
   outline-color: $color-font-primary;
 
@@ -100,6 +99,16 @@ body {
   .js-focus-visible &:focus:not(.focus-visible),
   &:focus:not(.focus-visible) {
     outline: none;
+  }
+
+  @include hover-query {
+    &:hover {
+      background-color: $color-secondary-dark;
+    }
+  }
+
+  &:active {
+    background-color: $color-secondary-dark;
   }
 }
 
@@ -236,7 +245,11 @@ body {
   cursor: pointer;
   background: none;
   border: none;
-  transition: outline-color ease-in-out $transition-duration;
+  border-radius: 0.3em;
+  transition: 
+    background-color ease-in-out $transition-duration,
+    outline-color ease-in-out $transition-duration;
+  -webkit-tap-highlight-color: transparent;
 
   &:focus {
     outline: 3px solid $color-font-primary;
@@ -254,11 +267,21 @@ body {
   &:disabled {
     cursor: default;
   }
+
+  &:active {
+    background-color: color.scale(white, $lightness: -20%);
+
+    .nav-container_top & {
+      background-color: color.scale($color-primary, $lightness: -5%);
+    }
+  }
 }
 
 .nav__link-text {
   position: relative;
-  transition: color ease-in-out $transition-duration;
+  transition: 
+    color ease-in-out $transition-duration,
+    opacity ease-in-out $transition-duration;
 
   .nav-container:not(.nav-container_top) .nav__link:disabled & {
     color: $color-primary;
@@ -268,19 +291,13 @@ body {
     color: white;
   }
 
-  .nav__link:hover:not(:disabled) & {
-    opacity: 0.7;
-  }
-
-  @include test-hover-pointer-query {
-    .nav__link:hover:not(:disabled) & {
-      opacity: 1;
-    }
-  }
-
   @include hover-query {
     .nav__link:hover:not(:disabled) & {
       opacity: 0.7;
+    }
+    
+    .nav__link:hover:active & {
+      opacity: 1;
     }
   }
 
