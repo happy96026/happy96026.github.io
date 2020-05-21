@@ -2,6 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const chokidar = require('chokidar')
 
 module.exports = {
   mode: 'development',
@@ -58,7 +59,13 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     open: true,
+    host: '0.0.0.0',
     port: 8000,
-    hot: true
+    hot: true,
+    before(_, server) {
+      chokidar.watch(['./src/index.html']).on('all', () => {
+        server.sockWrite(server.sockets, 'content-changed')
+      })
+    }
   }
 }
