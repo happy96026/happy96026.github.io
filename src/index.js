@@ -26,10 +26,11 @@ function main () {
   const main = document.querySelector('.main')
   const sectionContainers = document.querySelectorAll('.section-container')
   const sections = document.querySelectorAll('.section')
+  const animateOnIntersections = document.querySelectorAll('.animate-on-intersection')
 
   // Get height of nav bar when screen is small
   nav.style.width = '600px'
-  nav.style.height = 'initial'
+  nav.style.height = 'auto'
   const navHeightSmall = window.getComputedStyle(nav).height
   nav.style.width = ''
   nav.style.height = ''
@@ -132,11 +133,11 @@ function main () {
   // Set Navigation Link Color according to scroll position
   const setCurrentLink = container => {
     const newLink = document.querySelector(`[data-nav='${container.getAttribute('data-section')}']`)
-    const currentLink = document.querySelector('.nav__link:disabled')
+    const currentLink = document.querySelector('.nav__link_current')
 
     if (currentLink !== newLink) {
-      if (currentLink) currentLink.disabled = false
-      if (newLink) newLink.disabled = true
+      if (currentLink) currentLink.classList.remove('nav__link_current')
+      if (newLink) newLink.classList.add('nav__link_current')
     }
   }
 
@@ -171,11 +172,14 @@ function main () {
   window.addEventListener('scroll', detectScrollTop)
   detectScrollTop()
 
+  for (const div of animateOnIntersections) {
+    div.classList.add('animate-on-intersection_before')
+  }
   // Trigger animation on section at intersection
   const triggerSectionAnimation = () => {
-    for (const section of sections) {
-      if (section.getBoundingClientRect().top < window.innerHeight - 100)
-        section.classList.remove('section_before')
+    for (const div of animateOnIntersections) {
+      if (div.getBoundingClientRect().top < window.innerHeight - 100)
+        div.classList.remove('animate-on-intersection_before')
       else
         break
     }

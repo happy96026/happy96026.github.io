@@ -266,11 +266,7 @@ body {
     outline: none;
   }
 
-  &:disabled {
-    cursor: default;
-  }
-
-  &:active:not(:disabled) {
+  &:active {
     background-color: color.scale(white, $lightness: -20%);
 
     .nav-container_top & {
@@ -285,7 +281,7 @@ body {
     color ease-in-out $transition-duration,
     opacity ease-in-out $transition-duration;
 
-  .nav-container:not(.nav-container_top) .nav__link:disabled & {
+  .nav-container:not(.nav-container_top) .nav__link_current & {
     color: $color-primary;
   }
 
@@ -294,7 +290,7 @@ body {
   }
 
   @include hover-query {
-    .nav__link:hover:not(:disabled) & {
+    .nav__link:hover & {
       opacity: 0.7;
     }
     
@@ -320,7 +316,7 @@ body {
       background-color: white;
     }
 
-    .nav__link:disabled & {
+    .nav__link_current & {
       opacity: 1;
     }
   }
@@ -357,9 +353,9 @@ body {
   margin: 3rem auto;
   width: 1200px;
   max-width: 85%;
-  transition:
-    transform ease-in-out calc(#{$transition-duration} * 2),
-    opacity ease-in-out calc(#{$transition-duration} * 2);
+  // transition:
+    // transform ease-in-out calc(#{$transition-duration} * 2),
+    // opacity ease-in-out calc(#{$transition-duration} * 2);
 
   .#{$break-l} & {
     margin: 4rem auto;
@@ -370,10 +366,10 @@ body {
   }
 }
 
-.section_before {
-  transform: translateY(5vh);
-  opacity: 0;
-}
+// .section_before {
+  // transform: translateY(5vh);
+  // opacity: 0;
+// }
 
 .section__header {
   text-align: center;
@@ -386,6 +382,17 @@ body {
   .#{$break-xl} & {
     margin: 0 0 6rem;
   }
+}
+
+.animate-on-intersection {
+  transition:
+    transform ease-in-out calc(#{$transition-duration} * 2),
+    opacity ease-in-out calc(#{$transition-duration} * 2);
+}
+
+.animate-on-intersection_before {
+  transform: translateY(5vh);
+  opacity: 0;
 }
 
 .home {
@@ -502,7 +509,7 @@ body {
   border-radius: 15px;
   margin-bottom: 1em;
 
-  .#{$break-m} & {
+  .#{$break-m}:not(.no-flex) & {
     width: 35%;
     position: relative;
     top: 0.4em;
@@ -510,7 +517,7 @@ body {
 }
 
 .work__content {
-  .#{$break-m} & {
+  .#{$break-m}:not(.no-flex) & {
     width: 60%;
   }
 }
