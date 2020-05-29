@@ -25,7 +25,6 @@ function main () {
   const nav = document.querySelector('.nav')
   const main = document.querySelector('.main')
   const sectionContainers = document.querySelectorAll('.section-container')
-  const sections = document.querySelectorAll('.section')
   const animateOnIntersections = document.querySelectorAll('.animate-on-intersection')
 
   // Get height of nav bar when screen is small
@@ -184,8 +183,6 @@ function main () {
         break
     }
   }
-  window.addEventListener('scroll', triggerSectionAnimation)
-
   // Remove preloading screen
   const img = new Image()
   img.src = imgPath
@@ -201,13 +198,15 @@ function main () {
   })
 
   const promiseArray = [imgLoadedPromise]
-  if ('transition' in nav.style)
+  if ('transition' in nav.style) {
     promiseArray.push(navTransitionPromise)
+  }
 
   Promise.all(promiseArray).then(() => {
     document.documentElement.classList.remove('preloading')
     img.remove()
     nav.removeEventListener('transitionend', promiseHandler)
+    window.addEventListener('scroll', triggerSectionAnimation)
     triggerSectionAnimation()
   })
 }
