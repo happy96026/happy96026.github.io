@@ -4745,6 +4745,11 @@ signal-exit@^3.0.0:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.3.tgz#a1410c2edd8f077b08b4e253c8eacfcaf057461c"
   integrity sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
 
+simple-icons@^2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/simple-icons/-/simple-icons-2.14.0.tgz#10c170049763db62482799f6e66ab00bffc2b95a"
+  integrity sha512-AUixKWXsT53vcbwBrypERGUCWPmffpMToj9yXxY2qri2KTCvZp5JOfkht3+aaIWn0RR3EkNKi6hf2ySIz22h3g==
+
 snapdragon-node@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/snapdragon-node/-/snapdragon-node-2.1.1.tgz#6c175f86ff14bdb0724563e8f3c1b021a286853b"

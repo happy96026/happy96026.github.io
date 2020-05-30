@@ -10,6 +10,7 @@ import './element-remove-polyfill'
 import ResizeObserver from 'resize-observer-polyfill'
 
 import imgPath from './my-image.jpg'
+import resumeLink from './Min_Soung_Choi_Resume_2020.pdf'
 
 
 const navHeight = 65
@@ -26,26 +27,27 @@ function main () {
   const main = document.querySelector('.main')
   const sectionContainers = document.querySelectorAll('.section-container')
   const animateOnIntersections = document.querySelectorAll('.animate-on-intersection')
+  const downloadBtn = document.querySelector('.work__download-btn')
 
-  // Get height of nav bar when screen is small
-  nav.style.width = '600px'
-  nav.style.height = 'auto'
-  const navHeightSmall = window.getComputedStyle(nav).height
-  nav.style.width = ''
-  nav.style.height = ''
-
+  const focusables = main.querySelectorAll('button, a')
   // Nav show/hide
   const showNav = () => {
     let htmlWidth = window.innerWidth - document.documentElement.getBoundingClientRect().width
     htmlWidth = `calc(100% - ${htmlWidth}px)`
+    const offset = window.pageYOffset
     document.documentElement.style.width = htmlWidth
-    document.documentElement.setAttribute('data-offset', window.pageYOffset)
+    document.documentElement.setAttribute('data-offset', offset)
     navContainer.style.width = htmlWidth
-    nav.style.height = navHeightSmall
+
+    // nav.style.height = navHeightSmall
+    for (const focusable of focusables) {
+      focusable.setAttribute('tabindex', -1)
+    }
 
     navContainer.classList.add('nav-container_show')
-    nav.classList.add('nav_height-animate')
     document.body.classList.add('overflow-hide')
+
+    window.scrollTo(0, offset)
   }
   const hideNav = () => {
     navContainer.style.width = ''
@@ -59,11 +61,11 @@ function main () {
       window.scrollTo(0, parseInt(document.documentElement.getAttribute('data-offset')))
       document.documentElement.setAttribute('data-offset', '')
     }
+
+    for (const focusable of focusables) {
+      focusable.setAttribute('tabindex', '')
+    }
   }
-  nav.addEventListener('transitionend', e => {
-    if (e.propertyName === 'height' && !navContainer.classList.contains('nav-container_show'))
-      nav.classList.remove('nav_height-animate')
-  })
 
   // Nav trigger button for mobile
   navButton.addEventListener('click', () => {
@@ -88,7 +90,9 @@ function main () {
     if (e.currentTarget.getAttribute('data-nav') === 'home')
       top = 0
     else if (document.documentElement.classList.contains('m'))
-      top -= navHeight - 1
+      top += 1 - navHeight
+    else
+      top += 1
 
     const scrollOptions = { top }
     if ('now' in window.performance) 
@@ -105,6 +109,9 @@ function main () {
         scrollToElement(e)
     })
   }
+
+  // Add download link
+  downloadBtn.setAttribute('href', resumeLink)
 
   // resize observer
   const breakPoints = {
@@ -144,7 +151,7 @@ function main () {
     const offset = document.documentElement.classList.contains('m') ? navHeight : 0
     const lastSectionContainer = sectionContainers[sectionContainers.length - 1]
 
-    if (parseInt(lastSectionContainer.getBoundingClientRect().bottom) === window.innerHeight) {
+    if (window.innerHeight - lastSectionContainer.getBoundingClientRect().bottom > -1) {
       setCurrentLink(lastSectionContainer)
       return
     }

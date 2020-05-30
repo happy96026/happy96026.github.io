@@ -34,6 +34,7 @@
     "normalize.css": "^8.0.1",
     "object-fit-polyfill": "^0.1.0",
     "resize-observer-polyfill": "^1.5.1",
-    "scroll-behavior-polyfill": "^2.0.13"
+    "scroll-behavior-polyfill": "^2.0.13",
+    "simple-icons": "^2.14.0"
   }
 }

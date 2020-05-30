@@ -86,13 +86,15 @@ body {
   width: 52px;
   height: 52px;
   border: none;
-  background-color: $color-secondary;
+  background-color: $color-secondary-light;
   position: absolute;
   right: 1rem;
   top: 1rem;
   padding: 0;
   padding: 10px 10px;
   border-radius: 5px;
+  z-index: 1;
+  cursor: pointer;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
   transition: 
     background-color ease-in-out $transition-duration,
@@ -100,6 +102,7 @@ body {
     opacity ease-in-out $transition-duration;
   line-height: 0;
   outline-color: $color-font-primary;
+  -webkit-tap-highlight-color: transparent;
 
   .nav-container_top & {
     outline-color: white;
@@ -182,18 +185,21 @@ body {
 
 .nav {
   background-color: white;
-  height: 0;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  // height: 0;
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  visibility: hidden;
+  transform: translateY(-105%);
+  // visibility: hidden;
   transition: 
     box-shadow ease-in-out $transition-duration,
-    background-color ease-in-out $transition-duration;
+    background-color ease-in-out $transition-duration,
+    transform ease-in-out $transition-duration;
   
   .#{$break-m} & {
     height: $nav-height;
     padding: 0;
     visibility: visible;
+    transform: translateY(0);
   }
 
   .nav-container_top & {
@@ -206,19 +212,10 @@ body {
       background-color: $color-primary;
     }
   }
-}
 
-.nav_height-animate {
-  visibility: visible;
-  transition: 
-    box-shadow ease-in-out $transition-duration,
-    background-color ease-in-out $transition-duration,
-    height ease-in-out $transition-duration;
-}
-
-.nav_init {
-  height: 100%;
-  font-size: 16px;
+  .nav-container_show & {
+    transform: translateY(0);
+  }
 }
 
 .nav__list {
@@ -339,17 +336,28 @@ body {
 }
 
 .main {
-  position: static;
+  position: relative;
   transition: filter ease-in-out $transition-duration;
 
   .#{$break-m} & {
-    position: relative;
     top: $nav-height;
   }
 
   .nav-container_show + & {
     filter: blur(10px);
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
+  }
+
+  @-moz-document url-prefix() {
+    .nav-container_show + & {
+      filter: none;
+    }
   }
 }
 
@@ -362,6 +370,10 @@ body {
 
   &:not(.home) {
     justify-content: center;
+  }
+
+  .nav-container_show + .main > & {
+    pointer-events: none;
   }
 }
 
@@ -499,11 +511,15 @@ body {
   background-color: $color-grey;
 }
 
+.work {
+  background-color: white;
+}
+
 .work__experience {
   margin-bottom: 3em;
   font-size: 0.9em;
 
-  .#{$break-m} & {
+  .#{$break-sm} & {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -525,7 +541,7 @@ body {
   padding-top: calc(100% * 4 / 5);
   margin-bottom: 1em;
 
-  .#{$break-m}:not(.no-flex) & {
+  .#{$break-sm}:not(.no-flex) & {
     width: 35%;
     padding-top: calc(35% * 4 / 5);
     display: flex;
@@ -540,18 +556,23 @@ body {
   max-height: 100%;
   position: absolute;
   top: 50%;
+  left: 0;
   transform: translateY(-50%);
   border-radius: 15px;
 }
 
 .work__content {
-  .#{$break-m}:not(.no-flex) & {
+  .#{$break-sm}:not(.no-flex) & {
     width: 60%;
   }
 }
 
 .work__header {
   margin-bottom: 1.5em;
+}
+
+.work__header-top {
+  margin-bottom: 0.5em;
 }
 
 .work__company {
@@ -564,7 +585,6 @@ body {
 .work__position {
   display: block;
   color: $color-secondary;
-  margin-bottom: 0.5em;
 }
 
 .work__date {
@@ -577,9 +597,127 @@ body {
   color: $color-primary;
 }
 
+.work__download-btn-container {
+  text-align: center;
+}
+
+.work__download-btn {
+  display: inline-block;
+  font-size: 1.2rem;
+  background-color: $color-primary-light;
+  color: white;
+  padding: 1em 1.5em;
+  border-radius: 0.2em;
+  outline-color: $color-font-primary;
+  border: none;
+  text-decoration: none;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  transition: background-color ease-in-out $transition-duration;
+  -webkit-tap-highlight-color: transparent;
+
+  @include hover-query {
+    &:hover {
+      background-color: $color-primary;
+    }
+  }
+
+  &:active {
+    background-color: $color-primary-dark;
+  }
+
+  &:focus {
+    outline-width: 3px;
+    outline-style: solid;
+  }
+
+  .js-focus-visible &:focus:not(.focus-visible),
+  &:focus:not(.focus-visible) {
+    outline: none;
+  }
+}
+
 .contact {
   background-color: $color-secondary;
   color: white;
+}
+
+.contact__icon-list {
+  text-align: center;
+  margin-top: 2rem;
+
+  .#{$break-l} & {
+    margin-top: 3rem;
+  }
+
+  .#{$break-xl} & {
+    margin-top: 5rem;
+  }
+}
+
+.contact__icon-container {
+  display: inline-block;
+  -webkit-tap-highlight-color: transparent;
+  outline-color: $color-font-primary;
+
+  &:focus {
+    outline-width: 3px;
+    outline-style: solid;
+  }
+
+  .js-focus-visible &:focus:not(.focus-visible),
+  &:focus:not(.focus-visible) {
+    outline: none;
+  }
+}
+
+.contact__icon {
+  width: 6em;
+  margin: 0.75rem 0.75rem;
+  transition: transform ease-in-out $transition-duration,
+    fill ease-in-out $transition-duration,
+    background-color ease-in-out $transition-duration;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 0.7em;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  vertical-align: top;
+  -webkit-tap-highlight-color: transparent;
+
+  @include hover-query {
+    &:hover {
+      transform: scale(1.1, 1.1);
+    }
+  }
+}
+
+.github-icon {
+  fill: white;
+  background-color: #181717;
+
+  &:active {
+    fill: color.scale(white, $lightness: -20%);
+    background-color: color.scale(#181717, $lightness: -20%);
+  }
+}
+
+.linkedin-icon {
+  fill: white;
+  background-color: #0077b5;
+
+  &:active {
+    fill: color.scale(white, $lightness: -20%);
+    background-color: color.scale(#0077b5, $lightness: -20%);
+  }
+}
+
+.gmail-icon {
+  fill: white;
+  background-color: #d14836;
+
+  &:active {
+    fill: color.scale(white, $lightness: -20%);
+    background-color: color.scale(#d14836, $lightness: -20%);
+  }
 }
 
 .preloader {
